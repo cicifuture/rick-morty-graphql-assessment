@@ -27,10 +27,30 @@ The app will hot-reload as you edit files inside `src/`.
 
 ```
 src/
-├─ apollo/client.ts      // Apollo Client instance pointing at the Rick & Morty API
-├─ pages/CharactersPage.tsx
-├─ components/           // CharacterCard, Pagination (placeholders)
-├─ graphql/              // queries and generated types placeholders
-├─ App.tsx               // Root component that renders the Characters page
-└─ main.tsx              // Vite entry point that mounts the React app
+├─ apollo/
+│   └─ client.ts              // Apollo Client instance with cache + persistence
+│
+├─ components/
+│   ├─ CharacterCard/
+│   │   ├─ index.tsx          // CharacterCard component
+│   │   └─ CharacterCard.module.css
+│   │
+│   └─ Pagination/
+│       ├─ index.tsx          // Pagination component
+│       └─ Pagination.module.css
+│
+├─ graphql/
+│   ├─ queries.ts             // GraphQL queries
+│   └─ types.ts               // (TODO: replace with GraphQL Codegen)
+│
+├─ pages/
+│   └─ CharactersPage.tsx     // Main page displaying character list + pagination
+│
+├─ App.tsx                    // Root app component
+└─ main.tsx                   // React entry point, wraps App with ApolloProvider
+
 ```
+
+## TODO
+
+1. Use GraphQL Codegen to generate types from schema and queries
