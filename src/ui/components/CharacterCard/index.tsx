@@ -1,14 +1,15 @@
-import type { Character } from "@/graphql/types";
 import styles from "./CharacterCard.module.css";
+import type { CharacterVM } from "@/ui/viewModel/characters.viewModel";
 
-type CharacterProps = {
-  character: Character;
+type Props = {
+  character: CharacterVM;
 };
-export default function CharacterCard({ character }: CharacterProps) {
+
+export default function CharacterCard({ character }: Props) {
   return (
-    <article>
+    <article className={styles.card}>
       <img
-        src={character.image}
+        src={character.imageUrl}
         alt={character.name}
         className={styles.image}
         loading="lazy"
