@@ -1,23 +1,27 @@
 .pagination {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
   gap: 1rem;
   margin: 2rem 0;
 }
-
-button {
+.pagination button {
+  justify-self: start;
   border: 1px solid #ccc;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  background: white;
   cursor: pointer;
 }
-
-button:disabled {
+.pagination button:last-of-type {
+  justify-self: end;
+}
+.pagination button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
-
-button:hover:not(:disabled) {
+.pagination button:hover:not(:disabled) {
   background: #f1f1f1;
+}
+.pagination span {
+  justify-self: center;
 }

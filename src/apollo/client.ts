@@ -1,4 +1,4 @@
-// Apollo client initalization
+// // Apollo client initalization
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
 

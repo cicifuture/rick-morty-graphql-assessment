@@ -11,10 +11,6 @@ query GetCharacters($page: Int!) {
       name
       species
       image
-      gender
-      created
-      type
-      status
     }
   }
 }

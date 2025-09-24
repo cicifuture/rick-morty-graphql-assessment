@@ -12,8 +12,20 @@
 }
 
 .image {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
   border-radius: 8px;
+  background: linear-gradient(135deg, #f5f5f5, #e6e6e6);
+  overflow: hidden;
 }
 
 .name {

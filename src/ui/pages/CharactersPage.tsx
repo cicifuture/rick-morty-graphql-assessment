@@ -1,40 +1,51 @@
-import { useState } from "react";
-import { useCharacters } from "@/services/characters/characters.service";
 import CharacterCard from "@/ui/components/CharacterCard";
 import Pagination from "@/ui/components/Pagination";
 import styles from "./CharactersPage.module.css";
-
+import { useCharactersViewModel } from "@/ui/viewModel/characters.viewModel";
+import type { CharactersViewModel } from "@/ui/viewModel/characters.viewModel";
 export default function CharactersPage() {
-  const [page, setPage] = useState(1);
-  const { loading, error, data, refetch } = useCharacters(page);
+  const {
+    page,
+    items,
+    loading,
+    error,
+    canNext,
+    canPrev,
+    totalPages,
+    retry,
+    goToPage,
+  }: CharactersViewModel = useCharactersViewModel();
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading characters…</div>;
   }
 
   if (error) {
     return (
       <div className={styles.error}>
         Error loading characters.
-        <button onClick={() => refetch()}>Retry</button>
+        <button onClick={retry}>
+          Retry
+        </button>
       </div>
     );
   }
 
-  if (!data) return null;
+  if (!items.length) return null;
 
   return (
     <main className={styles.container}>
       <div className={styles.grid}>
-        {data.items.map((c) => (
+        {items.map((c) => (
           <CharacterCard key={c.id} character={c} />
         ))}
       </div>
       <Pagination
         page={page}
-        totalPages={data.pages}
-        hasPrev={!!data.prev}
-        hasNext={!!data.next}
-        onPageChange={setPage}
+        totalPages={totalPages}
+        hasPrev={canPrev}
+        hasNext={canNext}
+        onPageChange={goToPage}
       />
     </main>
   );
