@@ -5,10 +5,10 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
 ## Features
 
 - Typed GraphQL operations generated via GraphQL Code Generator (`TypedDocumentNode` output)
-- Apollo Client 4 with cache persistence and explicit service/view-model abstraction layers
+- Apollo Client 3 with cache persistence and an explicit service/view-model abstraction layer
 - Responsive character grid with sticky app shell and client-side pagination controls
 - React Router–based routing scaffold ready for additional pages
-- Modern build tooling: Vite 7, TypeScript 5.8, ESLint 9
+- Modern build tooling: Vite 7, TypeScript 5.8, ESLint 9, Vitest + Testing Library
 
 ## Getting Started
 
@@ -25,6 +25,10 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
    npm run dev
    ```
 4. Open the printed URL (defaults to `http://localhost:5173`). Hot Module Replacement is enabled for everything under `src/`.
+5. *(Optional)* **Run the test suite**
+   ```bash
+   npm test -- --run
+   ```
 
 ## NPM Scripts
 
@@ -33,6 +37,7 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
 - `npm run preview` – Serve the production build locally.
 - `npm run lint` – Run ESLint across the repo.
 - `npm run codegen` – Regenerate typed GraphQL documents and helpers.
+- `npm test` – Execute Vitest with the default watch mode (pass `--run` for CI-style runs).
 
 ## Project Structure
 
@@ -73,4 +78,4 @@ src/
 - Pagination state lives in the `CharactersPage` component; Apollo automatically refetches when the page changes.
 - When touching the API schema or queries, re-run `npm run codegen` before starting the dev server to keep types in sync.
 - The architecture separates fetching (`services`) from presentation (`ui`), which keeps React components focused on UI logic.
-
+- Tests live under `src/**/*.test.tsx` and use Vitest with React Testing Library; keep view-model dependencies mocked when unit-testing page logic.
