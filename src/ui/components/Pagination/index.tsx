@@ -35,7 +35,11 @@ export default function Pagination({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
-      if (target && (target.isContentEditable || /^(input|textarea|select)$/i.test(target.tagName))) {
+      if (
+        target &&
+        (target.isContentEditable ||
+          /^(input|textarea|select)$/i.test(target.tagName))
+      ) {
         return;
       }
 

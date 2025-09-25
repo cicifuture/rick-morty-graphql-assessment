@@ -1,8 +1,9 @@
+import type { Character } from "@/services/characters/characters";
 import styles from "./CharacterCard.module.css";
-import type { CharacterVM } from "@/services/characters/characters.mapper";
+
 
 type Props = {
-  character: CharacterVM;
+  character: Character;
 };
 
 export default function CharacterCard({ character }: Props) {

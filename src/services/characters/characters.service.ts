@@ -4,7 +4,8 @@ import {
   type GetCharactersQuery,
   type GetCharactersQueryVariables,
 } from "@/api/generated/graphql";
-import { mapToCharactersVM, type CharactersVM } from "./characters.mapper";
+import { mapToCharacters } from "./characters.mapper";
+import type { Characters } from "./characters";
 
 export function useCharacters(page: number) {
   const query = useQuery<GetCharactersQuery, GetCharactersQueryVariables>(
@@ -15,14 +16,14 @@ export function useCharacters(page: number) {
     }
   );
 
-  const vm: CharactersVM | null = query.data
-    ? mapToCharactersVM(query.data)
+  const characters: Characters | null = query.data
+    ? mapToCharacters(query.data)
     : null;
 
   return {
     loading: query.loading,
     error: query.error,
     refetch: query.refetch,
-    data: vm,
+    data: characters,
   };
 }

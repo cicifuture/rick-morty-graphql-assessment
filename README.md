@@ -39,6 +39,10 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
 - `npm run codegen` – Regenerate typed GraphQL documents and helpers.
 - `npm test` – Execute Vitest with the default watch mode (pass `--run` for CI-style runs).
 
+## Routing Overview
+
+The app is wired with `react-router-dom` inside `src/app/index.tsx`. `AppRoot` wraps the app in `BrowserRouter`, renders the shared layout (`AppShell`), and defines the child routes with `<Routes>/<Route>`. `AppShell` hosts the `<Outlet />`, so adding a new page is as simple as registering another `<Route>` alongside the `CharactersPage` entry.
+
 ## Project Structure
 
 ```

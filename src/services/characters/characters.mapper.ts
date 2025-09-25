@@ -1,27 +1,13 @@
 import type { GetCharactersQuery } from "@/api/generated/graphql";
-
-// UI-safe type (non-nullable, ready for rendering)
-export type CharacterVM = {
-  id: string;
-  name: string;
-  species: string;
-  imageUrl: string;
-};
-
-export type CharactersVM = {
-  items: CharacterVM[];
-  pages: number;
-  next: number | null;
-  prev: number | null;
-};
+import type { Character, Characters } from "./characters";
 
 const FALLBACK_IMG = "https://rickandmortyapi.com/api/character/avatar/19.jpeg";
 
 // Mapper: API → UI-safe model
-export function mapToCharactersVM(data: GetCharactersQuery): CharactersVM {
+export function mapToCharacters(data: GetCharactersQuery): Characters {
   const info = data.characters?.info;
 
-  const items: CharacterVM[] =
+  const items: Character[] =
     data.characters?.results
       ?.filter(
         (character): character is NonNullable<typeof character> => !!character
