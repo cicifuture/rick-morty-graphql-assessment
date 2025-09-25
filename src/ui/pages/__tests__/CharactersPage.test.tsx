@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import type { CharacterVM } from '@/services/characters/characters.mapper';
-import type { CharactersViewModel } from '@/ui/viewModel/characters.viewModel';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from "@testing-library/react";
+import type { CharacterVM } from "@/services/characters/characters.mapper";
+import type { CharactersViewModel } from "@/ui/viewModel/characters.viewModel";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const renderedCharacters: CharacterVM[] = [];
 type PaginationMockProps = {
@@ -13,14 +13,14 @@ type PaginationMockProps = {
 };
 let lastPaginationProps: PaginationMockProps | undefined;
 
-vi.mock('@/ui/components/CharacterCard', () => ({
+vi.mock("@/ui/components/CharacterCard", () => ({
   default: ({ character }: { character: CharacterVM }) => {
     renderedCharacters.push(character);
     return <div data-testid="character-card">{character.name}</div>;
   },
 }));
 
-vi.mock('@/ui/components/Pagination', () => ({
+vi.mock("@/ui/components/Pagination", () => ({
   default: (props: PaginationMockProps) => {
     lastPaginationProps = props;
     return (
@@ -36,12 +36,12 @@ vi.mock('@/ui/components/Pagination', () => ({
   },
 }));
 
-vi.mock('@/ui/viewModel/characters.viewModel', () => ({
+vi.mock("@/ui/viewModel/characters.viewModel", () => ({
   useCharactersViewModel: vi.fn(),
 }));
 
-import CharactersPage from '../CharactersPage';
-import { useCharactersViewModel } from '@/ui/viewModel/characters.viewModel';
+import CharactersPage from "../CharactersPage";
+import { useCharactersViewModel } from "@/ui/viewModel/characters.viewModel";
 
 const mockUseCharactersViewModel = vi.mocked(useCharactersViewModel);
 
@@ -66,8 +66,8 @@ beforeEach(() => {
   mockUseCharactersViewModel.mockReset();
 });
 
-describe('CharactersPage', () => {
-  it('renders the loading state while data is fetching', () => {
+describe("CharactersPage", () => {
+  it("renders the loading state while data is fetching", () => {
     mockUseCharactersViewModel.mockReturnValue(
       createViewModel({ loading: true })
     );
@@ -79,28 +79,38 @@ describe('CharactersPage', () => {
     expect(lastPaginationProps).toBeUndefined();
   });
 
-  it('renders the error state and retries when requested', () => {
+  it("renders the error state and retries when requested", () => {
     const retry = vi.fn();
     mockUseCharactersViewModel.mockReturnValue(
       createViewModel({
-        error: new Error('boom'),
+        error: new Error("boom"),
         retry,
       })
     );
 
     render(<CharactersPage />);
 
-    expect(screen.getByText('Error loading characters.')).toBeInTheDocument();
+    expect(screen.getByText("Error loading characters.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /retry/i }));
+    fireEvent.click(screen.getByRole("button", { name: /retry/i }));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 
-  it('renders character cards and pagination when data is available', () => {
+  it("renders character cards and pagination when data is available", () => {
     const goToPage = vi.fn();
     const characters: CharacterVM[] = [
-      { id: '1', name: 'Rick Sanchez', species: 'Human', imageUrl: 'rick.png' },
-      { id: '2', name: 'Morty Smith', species: 'Human', imageUrl: 'morty.png' },
+      {
+        id: "1",
+        name: "Rick Sanchez",
+        species: "Human",
+        imageUrl: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+      },
+      {
+        id: "2",
+        name: "Morty Smith",
+        species: "Human",
+        imageUrl: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+      },
     ];
 
     mockUseCharactersViewModel.mockReturnValue(
@@ -117,10 +127,12 @@ describe('CharactersPage', () => {
     render(<CharactersPage />);
 
     expect(renderedCharacters).toHaveLength(characters.length);
-    expect(screen.getAllByTestId('character-card')).toHaveLength(characters.length);
-    expect(screen.getByText('Page 2 / 5')).toBeInTheDocument();
+    expect(screen.getAllByTestId("character-card")).toHaveLength(
+      characters.length
+    );
+    expect(screen.getByText("Page 2 / 5")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /trigger change/i }));
+    fireEvent.click(screen.getByRole("button", { name: /trigger change/i }));
     expect(goToPage).toHaveBeenCalledWith(3);
     expect(lastPaginationProps).toMatchObject({
       hasPrev: true,
@@ -128,7 +140,7 @@ describe('CharactersPage', () => {
     });
   });
 
-  it('returns null when there are no characters to render', () => {
+  it("returns null when there are no characters to render", () => {
     mockUseCharactersViewModel.mockReturnValue(createViewModel());
 
     const { container } = render(<CharactersPage />);

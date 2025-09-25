@@ -9,6 +9,7 @@ export default function CharacterCard({ character }: Props) {
   return (
     <article className={styles.card}>
       <div className={styles.imageWrapper}>
+        {/* Reserve a square slot to avoid layout shift while the image streams in */}
         <img
           src={character.imageUrl}
           alt={character.name}

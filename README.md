@@ -25,7 +25,7 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
    npm run dev
    ```
 4. Open the printed URL (defaults to `http://localhost:5173`). Hot Module Replacement is enabled for everything under `src/`.
-5. *(Optional)* **Run the test suite**
+5. _(Optional)_ **Run the test suite**
    ```bash
    npm test -- --run
    ```
@@ -53,16 +53,22 @@ src/
 ├─ app/
 │  ├─ AppShell/               # Sticky header layout container
 │  ├─ providers/              # ApolloProvider wrapper
-│  └─ index.tsx               # Top-level routing + providers
+│  └─ index.tsx               # Routing entry that mounts providers
+│
+├─ assets/                    # Static assets served by Vite (e.g. icons)
 │
 ├─ services/
 │  └─ characters/             # Data/query hooks and mapping to view models
 │
+├─ styles/                    # Global styles (currently empty)
+│
+├─ test/                      # Vitest setup and shared testing utilities
+│
 ├─ ui/
 │  ├─ components/             # Presentational components (CharacterCard, Pagination)
+│  ├─ viewModel/              # Hooks exposing UI-facing state (e.g., characters.viewModel)
 │  └─ pages/                  # Route-level pages (CharactersPage)
 │
-├─ styles/                    # Global styles
 └─ main.tsx                   # App entry point
 ```
 

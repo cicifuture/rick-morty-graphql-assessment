@@ -32,6 +32,7 @@ export function useCharactersViewModel(): CharactersViewModel {
     (target: number) => {
       setPage((current) => {
         const desired = Number.isFinite(target) ? target : current;
+        // Guard against race conditions where pagination overshoots the server total
         return clampPage(desired, totalPages);
       });
     },
