@@ -50,7 +50,7 @@ export default function Pagination({
         Prev
       </button>
       <span>
-        Page {page} / {totalPages}
+        Page {page} of {totalPages}
       </span>
       <button disabled={!hasNext} onClick={onNext}>
         Next

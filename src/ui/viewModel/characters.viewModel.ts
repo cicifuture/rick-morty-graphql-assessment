@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useCharactersService } from "@/services/characters/characters.service";
 import type { Character } from "@/services/characters/characters.type";
+import { useSearchParams } from "react-router-dom";
 
 export type CharactersViewModel = {
   page: number;
@@ -16,7 +17,12 @@ export type CharactersViewModel = {
 };
 
 export function useCharactersViewModel(): CharactersViewModel {
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPageState] = useState<number>(() => {
+    const urlPage: string | null = searchParams.get("page");
+    return urlPage ? Math.max(1, parseInt(urlPage, 10)) : 1;
+  });
+
   const { loading, error, data, refetch } = useCharactersService(page);
 
   const items = data?.items ?? [];
@@ -24,40 +30,39 @@ export function useCharactersViewModel(): CharactersViewModel {
   const canPrev = data?.prev !== null && data?.prev !== undefined;
   const canNext = data?.next !== null && data?.next !== undefined;
 
-  // For future improvements, we can use goToPage to implement more navigation methods
   const goToPage = useCallback(
     (target: number) => {
-      if (
-        typeof target !== "number" ||
-        !Number.isFinite(target) ||
-        target < 1
-      ) {
-        console.warn(`Invalid page: ${target}. Must be a positive number.`);
-        return;
-      }
-
       if (target > totalPages) {
         console.warn(`Page ${target} exceeds total pages ${totalPages}`);
         target = totalPages;
       }
 
-      const clampPage = (page: number, max: number) => {
-        if (page < 1) return 1;
-        return max > 0 ? Math.min(page, max) : page;
-      };
+      const clampedPage = Math.min(Math.max(1, target), totalPages);
+      setPageState(clampedPage);
 
-      setPage((current) => {
-        const newPage = clampPage(target, totalPages);
-        if (newPage !== current) {
-          requestAnimationFrame(() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
+      setSearchParams((prev) => {
+        if (clampedPage === 1) {
+          prev.delete("page");
+        } else {
+          prev.set("page", clampedPage.toString());
         }
-        return newPage;
+        return prev;
+      });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
     },
-    [totalPages]
+    [totalPages, setSearchParams]
   );
+
+  useEffect(() => {
+    const urlPage = searchParams.get("page");
+    const pageFromUrl = urlPage ? Math.max(1, parseInt(urlPage, 10)) : 1;
+
+    if (pageFromUrl !== page) {
+      setPageState(pageFromUrl);
+    }
+  }, [searchParams, page]);
 
   const goNext = useCallback(() => {
     if (canNext) {

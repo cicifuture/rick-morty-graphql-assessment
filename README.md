@@ -92,5 +92,4 @@ src/
 
 ## TODO
 
-- Persist the active page in storage so a browser reload keeps the user on the same result set.
 - Pre-fetch the next page while browsing to smooth out the initial load for unseen pages.

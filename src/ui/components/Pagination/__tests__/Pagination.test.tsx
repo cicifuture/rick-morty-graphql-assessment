@@ -12,7 +12,7 @@ describe("Pagination", () => {
     onNext.mockReset();
   });
 
-  it('renders pagination metadata and button states', () => {
+  it("renders pagination metadata and button states", () => {
     render(
       <Pagination
         page={3}
@@ -24,12 +24,12 @@ describe("Pagination", () => {
       />
     );
 
-    expect(screen.getByText('Page 3 / 8')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /prev/i })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
+    expect(screen.getByText("Page 3 of 8")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /prev/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /next/i })).toBeDisabled();
   });
 
-  it('invokes callbacks when buttons are pressed', async () => {
+  it("invokes callbacks when buttons are pressed", async () => {
     const user = userEvent.setup();
 
     render(
@@ -43,14 +43,14 @@ describe("Pagination", () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /prev/i }));
-    await user.click(screen.getByRole('button', { name: /next/i }));
+    await user.click(screen.getByRole("button", { name: /prev/i }));
+    await user.click(screen.getByRole("button", { name: /next/i }));
 
     expect(onPrev).toHaveBeenCalledTimes(1);
     expect(onNext).toHaveBeenCalledTimes(1);
   });
 
-  it('ignores clicks when the controls are disabled', async () => {
+  it("ignores clicks when the controls are disabled", async () => {
     const user = userEvent.setup();
 
     render(
@@ -64,14 +64,14 @@ describe("Pagination", () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: /prev/i }));
-    await user.click(screen.getByRole('button', { name: /next/i }));
+    await user.click(screen.getByRole("button", { name: /prev/i }));
+    await user.click(screen.getByRole("button", { name: /next/i }));
 
     expect(onPrev).not.toHaveBeenCalled();
     expect(onNext).not.toHaveBeenCalled();
   });
 
-  it('responds to keyboard navigation when focus is outside form fields', async () => {
+  it("responds to keyboard navigation when focus is outside form fields", async () => {
     const user = userEvent.setup();
 
     render(
@@ -85,13 +85,13 @@ describe("Pagination", () => {
       />
     );
 
-    await user.keyboard('{ArrowLeft}{ArrowRight}');
+    await user.keyboard("{ArrowLeft}{ArrowRight}");
 
     expect(onPrev).toHaveBeenCalledTimes(1);
     expect(onNext).toHaveBeenCalledTimes(1);
   });
 
-  it('does not handle arrow keys typed inside editable elements', async () => {
+  it("does not handle arrow keys typed inside editable elements", async () => {
     const user = userEvent.setup();
 
     render(
@@ -108,10 +108,10 @@ describe("Pagination", () => {
       </div>
     );
 
-    const input = screen.getByRole('textbox', { name: /filter/i });
+    const input = screen.getByRole("textbox", { name: /filter/i });
     input.focus();
 
-    await user.keyboard('{ArrowLeft}{ArrowRight}');
+    await user.keyboard("{ArrowLeft}{ArrowRight}");
 
     expect(onPrev).not.toHaveBeenCalled();
     expect(onNext).not.toHaveBeenCalled();
