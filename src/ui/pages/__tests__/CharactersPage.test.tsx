@@ -27,7 +27,7 @@ vi.mock("@/ui/components/Pagination", () => ({
     return (
       <div data-testid="pagination">
         <span>
-          Page {props.page} / {props.totalPages}
+          Page {props.page} of {props.totalPages}
         </span>
         <button onClick={props.onPrev}>Prev</button>
         <button onClick={props.onNext}>Next</button>
@@ -133,7 +133,7 @@ describe("CharactersPage", () => {
     expect(screen.getAllByTestId("character-card")).toHaveLength(
       characters.length
     );
-    expect(screen.getByText("Page 2 / 5")).toBeInTheDocument();
+    expect(screen.getByText("Page 2 of 5")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /next/i }));
     fireEvent.click(screen.getByRole("button", { name: /prev/i }));

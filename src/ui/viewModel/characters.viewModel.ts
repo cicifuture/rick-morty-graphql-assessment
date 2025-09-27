@@ -2,6 +2,8 @@ import { useCallback, useState, useEffect } from "react";
 import { useCharactersService } from "@/services/characters/characters.service";
 import type { Character } from "@/services/characters/characters.type";
 import { useSearchParams } from "react-router-dom";
+import { useApolloClient } from "@apollo/client";
+import { GetCharactersDocument } from "@/api/generated/graphql";
 
 export type CharactersViewModel = {
   page: number;
@@ -17,6 +19,7 @@ export type CharactersViewModel = {
 };
 
 export function useCharactersViewModel(): CharactersViewModel {
+  const apolloClient = useApolloClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPageState] = useState<number>(() => {
     const urlPage: string | null = searchParams.get("page");
@@ -29,6 +32,24 @@ export function useCharactersViewModel(): CharactersViewModel {
   const totalPages = data?.pages ?? 1;
   const canPrev = data?.prev !== null && data?.prev !== undefined;
   const canNext = data?.next !== null && data?.next !== undefined;
+
+  useEffect(() => {
+    if (!loading && data && canNext && page < totalPages) {
+      const timer = setTimeout(() => {
+        apolloClient
+          .query({
+            query: GetCharactersDocument,
+            variables: { page: page + 1 },
+            fetchPolicy: "cache-first",
+          })
+          .catch(() => {
+            // Ignore prefetch errors
+          });
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [page, canNext, totalPages, loading, data, apolloClient]);
 
   const goToPage = useCallback(
     (target: number) => {

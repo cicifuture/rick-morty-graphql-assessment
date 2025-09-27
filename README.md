@@ -9,6 +9,8 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
 - Responsive character grid with sticky app shell and client-side pagination controls
 - React Router–based routing scaffold ready for additional pages
 - Modern build tooling: Vite 7, TypeScript 5.8, ESLint 9, Vitest + Testing Library
+- Persist the active page in storage so a browser reload keeps the user on the same result set
+- Pre-fetch the next page while browsing to smooth out the initial load for unseen pages
 
 ## Getting Started
 
@@ -37,7 +39,7 @@ A React 19 + Vite application for browsing Rick & Morty characters backed by the
 - `npm run preview` – Serve the production build locally.
 - `npm run lint` – Run ESLint across the repo.
 - `npm run codegen` – Regenerate typed GraphQL documents and helpers.
-- `npm test` – Execute Vitest with the default watch mode (pass `--run` for CI-style runs).
+- `npm test` – Execute Vitest with the default watch mode.
 
 ## Routing Overview
 
@@ -91,5 +93,3 @@ src/
 - Tests live under `src/**/*.test.tsx` and use Vitest with React Testing Library; keep view-model dependencies mocked when unit-testing page logic.
 
 ## TODO
-
-- Pre-fetch the next page while browsing to smooth out the initial load for unseen pages.

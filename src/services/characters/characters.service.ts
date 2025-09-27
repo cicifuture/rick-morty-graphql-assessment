@@ -12,7 +12,8 @@ export function useCharactersService(page: number) {
     GetCharactersDocument,
     {
       variables: { page },
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: "cache-first", 
+      errorPolicy: "all",
     }
   );
 
