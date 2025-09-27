@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import styles from "./Pagination.module.css";
 
 type Props = {
@@ -6,7 +6,8 @@ type Props = {
   totalPages: number;
   hasPrev: boolean;
   hasNext: boolean;
-  onPageChange: (page: number) => void;
+  onPrev: () => void;
+  onNext: () => void;
 };
 
 export default function Pagination({
@@ -14,24 +15,9 @@ export default function Pagination({
   totalPages,
   hasPrev,
   hasNext,
-  onPageChange,
+  onPrev,
+  onNext,
 }: Props) {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const goPrev = useCallback(() => {
-    if (!hasPrev) return;
-    onPageChange(page - 1);
-    scrollToTop();
-  }, [hasPrev, onPageChange, page]);
-
-  const goNext = useCallback(() => {
-    if (!hasNext) return;
-    onPageChange(page + 1);
-    scrollToTop();
-  }, [hasNext, onPageChange, page]);
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
@@ -45,10 +31,10 @@ export default function Pagination({
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        goPrev();
+        onPrev();
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        goNext();
+        onNext();
       }
     };
 
@@ -56,18 +42,18 @@ export default function Pagination({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [goNext, goPrev]);
+  }, [onNext, onPrev]);
 
   return (
     <nav className={styles.pagination}>
-      <button disabled={!hasPrev} onClick={goPrev}>
-        ◀ Prev
+      <button disabled={!hasPrev} onClick={onPrev}>
+        Prev
       </button>
       <span>
         Page {page} / {totalPages}
       </span>
-      <button disabled={!hasNext} onClick={goNext}>
-        Next ▶
+      <button disabled={!hasNext} onClick={onNext}>
+        Next
       </button>
     </nav>
   );

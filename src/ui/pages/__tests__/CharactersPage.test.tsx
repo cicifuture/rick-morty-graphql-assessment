@@ -9,7 +9,8 @@ type PaginationMockProps = {
   totalPages: number;
   hasPrev: boolean;
   hasNext: boolean;
-  onPageChange: (page: number) => void;
+  onPrev: () => void;
+  onNext: () => void;
 };
 let lastPaginationProps: PaginationMockProps | undefined;
 
@@ -28,9 +29,8 @@ vi.mock("@/ui/components/Pagination", () => ({
         <span>
           Page {props.page} / {props.totalPages}
         </span>
-        <button onClick={() => props.onPageChange(props.page + 1)}>
-          Trigger change
-        </button>
+        <button onClick={props.onPrev}>Prev</button>
+        <button onClick={props.onNext}>Next</button>
       </div>
     );
   },
@@ -56,7 +56,8 @@ const createViewModel = (
   loading: false,
   error: undefined,
   retry: vi.fn(),
-  goToPage: vi.fn(),
+  goNext: vi.fn(),
+  goPrev: vi.fn(),
   ...overrides,
 });
 
@@ -97,7 +98,8 @@ describe("CharactersPage", () => {
   });
 
   it("renders character cards and pagination when data is available", () => {
-    const goToPage = vi.fn();
+    const goNext = vi.fn();
+    const goPrev = vi.fn();
     const characters: Character[] = [
       {
         id: "1",
@@ -120,7 +122,8 @@ describe("CharactersPage", () => {
         canPrev: true,
         canNext: true,
         items: characters,
-        goToPage,
+        goNext,
+        goPrev,
       })
     );
 
@@ -132,11 +135,15 @@ describe("CharactersPage", () => {
     );
     expect(screen.getByText("Page 2 / 5")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /trigger change/i }));
-    expect(goToPage).toHaveBeenCalledWith(3);
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
+    fireEvent.click(screen.getByRole("button", { name: /prev/i }));
+    expect(goNext).toHaveBeenCalledTimes(1);
+    expect(goPrev).toHaveBeenCalledTimes(1);
     expect(lastPaginationProps).toMatchObject({
       hasPrev: true,
       hasNext: true,
+      onNext: goNext,
+      onPrev: goPrev,
     });
   });
 

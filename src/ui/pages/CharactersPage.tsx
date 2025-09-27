@@ -13,7 +13,8 @@ export default function CharactersPage() {
     canPrev,
     totalPages,
     retry,
-    goToPage,
+    goNext,
+    goPrev,
   }: CharactersViewModel = useCharactersViewModel();
 
   if (loading) {
@@ -24,9 +25,7 @@ export default function CharactersPage() {
     return (
       <div className={styles.error}>
         Error loading characters.
-        <button onClick={retry}>
-          Retry
-        </button>
+        <button onClick={retry}>Retry</button>
       </div>
     );
   }
@@ -45,7 +44,8 @@ export default function CharactersPage() {
         totalPages={totalPages}
         hasPrev={canPrev}
         hasNext={canNext}
-        onPageChange={goToPage}
+        onPrev={goPrev}
+        onNext={goNext}
       />
     </main>
   );
