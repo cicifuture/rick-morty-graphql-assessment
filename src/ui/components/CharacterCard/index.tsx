@@ -1,6 +1,5 @@
-import type { Character } from "@/services/characters/characters";
+import type { Character } from "@/services/characters/characters.type";
 import styles from "./CharacterCard.module.css";
-
 
 type Props = {
   character: Character;

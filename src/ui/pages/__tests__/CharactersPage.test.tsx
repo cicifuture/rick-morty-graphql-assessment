@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { CharacterVM } from "@/services/characters/characters.mapper";
+import type { Character } from "@/services/characters/characters.type";
 import type { CharactersViewModel } from "@/ui/viewModel/characters.viewModel";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const renderedCharacters: CharacterVM[] = [];
+const renderedCharacters: Character[] = [];
 type PaginationMockProps = {
   page: number;
   totalPages: number;
@@ -14,7 +14,7 @@ type PaginationMockProps = {
 let lastPaginationProps: PaginationMockProps | undefined;
 
 vi.mock("@/ui/components/CharacterCard", () => ({
-  default: ({ character }: { character: CharacterVM }) => {
+  default: ({ character }: { character: Character }) => {
     renderedCharacters.push(character);
     return <div data-testid="character-card">{character.name}</div>;
   },
@@ -98,7 +98,7 @@ describe("CharactersPage", () => {
 
   it("renders character cards and pagination when data is available", () => {
     const goToPage = vi.fn();
-    const characters: CharacterVM[] = [
+    const characters: Character[] = [
       {
         id: "1",
         name: "Rick Sanchez",

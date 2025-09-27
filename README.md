@@ -89,3 +89,8 @@ src/
 - When touching the API schema or queries, re-run `npm run codegen` before starting the dev server to keep types in sync.
 - The architecture separates fetching (`services`) from presentation (`ui`), which keeps React components focused on UI logic.
 - Tests live under `src/**/*.test.tsx` and use Vitest with React Testing Library; keep view-model dependencies mocked when unit-testing page logic.
+
+## TODO
+
+- Persist the active page in storage so a browser reload keeps the user on the same result set.
+- Pre-fetch the next page while browsing to smooth out the initial load for unseen pages.

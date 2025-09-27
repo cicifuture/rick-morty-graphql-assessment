@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
-import { useCharacters } from "@/services/characters/characters.service";
-import type { CharacterVM } from "@/services/characters/characters.mapper";
+import { useCharactersService } from "@/services/characters/characters.service";
+import type { Character } from "@/services/characters/characters.type";
 
 export type CharactersViewModel = {
   page: number;
-  items: CharacterVM[];
+  items: Character[];
   totalPages: number;
   canPrev: boolean;
   canNext: boolean;
@@ -21,7 +21,7 @@ const clampPage = (page: number, max: number) => {
 
 export function useCharactersViewModel(): CharactersViewModel {
   const [page, setPage] = useState(1);
-  const { loading, error, data, refetch } = useCharacters(page);
+  const { loading, error, data, refetch } = useCharactersService(page);
 
   const items = useMemo(() => data?.items ?? [], [data]);
   const totalPages = data?.pages ?? 1;

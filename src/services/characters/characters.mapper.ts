@@ -1,5 +1,5 @@
 import type { GetCharactersQuery } from "@/api/generated/graphql";
-import type { Character, Characters } from "./characters";
+import type { Character, Characters } from "./characters.type";
 
 const FALLBACK_IMG = "https://rickandmortyapi.com/api/character/avatar/19.jpeg";
 

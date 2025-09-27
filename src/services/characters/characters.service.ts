@@ -5,14 +5,14 @@ import {
   type GetCharactersQueryVariables,
 } from "@/api/generated/graphql";
 import { mapToCharacters } from "./characters.mapper";
-import type { Characters } from "./characters";
+import type { Characters } from "./characters.type";
 
-export function useCharacters(page: number) {
+export function useCharactersService(page: number) {
   const query = useQuery<GetCharactersQuery, GetCharactersQueryVariables>(
     GetCharactersDocument,
     {
       variables: { page },
-      fetchPolicy: "cache-and-network", 
+      fetchPolicy: "cache-and-network",
     }
   );
 
