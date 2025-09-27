@@ -35,17 +35,33 @@ export function useCharactersViewModel(): CharactersViewModel {
 
   useEffect(() => {
     if (!loading && data && canNext && page < totalPages) {
-      const timer = setTimeout(() => {
-        apolloClient
-          .query({
+      const timer = setTimeout(async () => {
+        try {
+          const nextPageData = await apolloClient.query({
             query: GetCharactersDocument,
             variables: { page: page + 1 },
             fetchPolicy: "cache-first",
-          })
-          .catch(() => {
-            // Ignore prefetch errors
           });
-      }, 800);
+
+          if (nextPageData.data?.characters?.results) {
+            const imageUrls = nextPageData.data.characters.results
+              .map((character) => character && character.image)
+              .filter((item) => item !== null && item !== undefined);
+
+            imageUrls.forEach((url) => {
+              if (typeof url === "string") {
+                // new Image() is equal to document.createElement('img'), then it will stored in browser cache
+                // so when the real <img> tag use the same url, it will load from cache instead of network
+                // which makes the image appear faster
+                const img = new Image();
+                img.src = url;
+              }
+            });
+          }
+        } catch (error) {
+          console.warn("Prefetch failed:", error);
+        }
+      }, 300);
 
       return () => clearTimeout(timer);
     }
@@ -70,7 +86,7 @@ export function useCharactersViewModel(): CharactersViewModel {
         return prev;
       });
       requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0 });
       });
     },
     [totalPages, setSearchParams]
