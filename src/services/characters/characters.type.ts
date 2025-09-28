@@ -12,3 +12,9 @@ export type Characters = {
   next: number | null;
   prev: number | null;
 };
+
+export type CharactersError =
+  | { type: "network"; message: string }
+  | { type: "graphql"; message: string; details: string[] }
+  | { type: "client"; message: string }
+  | { type: "unknown"; message: string };

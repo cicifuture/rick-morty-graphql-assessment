@@ -1,6 +1,9 @@
 import { useCallback, useState, useEffect } from "react";
 import { useCharactersService } from "@/services/characters/characters.service";
-import type { Character } from "@/services/characters/characters.type";
+import type {
+  Character,
+  CharactersError,
+} from "@/services/characters/characters.type";
 import { useSearchParams } from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
 import { GetCharactersDocument } from "@/api/generated/graphql";
@@ -12,7 +15,7 @@ export type CharactersViewModel = {
   canPrev: boolean;
   canNext: boolean;
   loading: boolean;
-  error: Error | undefined;
+  error: CharactersError | null;
   retry: () => void;
   goNext: () => void;
   goPrev: () => void;

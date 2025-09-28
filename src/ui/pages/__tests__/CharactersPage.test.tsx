@@ -1,5 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { Character } from "@/services/characters/characters.type";
+import type {
+  Character,
+  CharactersError,
+} from "@/services/characters/characters.type";
 import type { CharactersViewModel } from "@/ui/viewModel/characters.viewModel";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -54,7 +57,7 @@ const createViewModel = (
   canPrev: false,
   canNext: false,
   loading: false,
-  error: undefined,
+  error: null,
   retry: vi.fn(),
   goNext: vi.fn(),
   goPrev: vi.fn(),
@@ -82,16 +85,20 @@ describe("CharactersPage", () => {
 
   it("renders the error state and retries when requested", () => {
     const retry = vi.fn();
+    const error: CharactersError = {
+      type: "network",
+      message: "Network error. Please check your connection and try again.",
+    };
     mockUseCharactersViewModel.mockReturnValue(
       createViewModel({
-        error: new Error("boom"),
+        error,
         retry,
       })
     );
 
     render(<CharactersPage />);
 
-    expect(screen.getByText("Error loading characters.")).toBeInTheDocument();
+    expect(screen.getByText(error.message)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /retry/i }));
     expect(retry).toHaveBeenCalledTimes(1);

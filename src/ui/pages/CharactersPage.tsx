@@ -28,7 +28,14 @@ export default function CharactersPage() {
   if (error) {
     return (
       <div className={styles.error}>
-        Error loading characters.
+        <p>{error.message}</p>
+        {error.type === "graphql" && error.details.length > 0 && (
+          <ul>
+            {error.details.map((detail, index) => (
+              <li key={index}>{detail}</li>
+            ))}
+          </ul>
+        )}
         <button onClick={retry}>Retry</button>
       </div>
     );
