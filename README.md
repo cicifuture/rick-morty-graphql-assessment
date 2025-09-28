@@ -93,3 +93,5 @@ src/
 - Tests live under `src/**/*.test.tsx` and use Vitest with React Testing Library; keep view-model dependencies mocked when unit-testing page logic.
 
 ## TODO
+
+- Network error, client error, server error handling

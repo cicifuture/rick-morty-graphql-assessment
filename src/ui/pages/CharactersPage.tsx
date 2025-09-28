@@ -3,6 +3,8 @@ import Pagination from "@/ui/components/Pagination";
 import styles from "./CharactersPage.module.css";
 import { useCharactersViewModel } from "@/ui/viewModel/characters.viewModel";
 import type { CharactersViewModel } from "@/ui/viewModel/characters.viewModel";
+
+// Page displaying a grid of character cards with pagination controls
 export default function CharactersPage() {
   const {
     page,
@@ -17,10 +19,12 @@ export default function CharactersPage() {
     goPrev,
   }: CharactersViewModel = useCharactersViewModel();
 
+  // Loading state
   if (loading) {
     return <div className={styles.loading}>Loading characters…</div>;
   }
 
+  // Error state
   if (error) {
     return (
       <div className={styles.error}>
@@ -30,7 +34,9 @@ export default function CharactersPage() {
     );
   }
 
-  if (!items.length) return null;
+  // Empty state
+  if (!items.length)
+    return <div className={styles.emptyList}>No characters found.</div>;
 
   return (
     <main className={styles.container}>

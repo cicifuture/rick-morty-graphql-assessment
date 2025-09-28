@@ -147,11 +147,12 @@ describe("CharactersPage", () => {
     });
   });
 
-  it("returns null when there are no characters to render", () => {
+  it("renders the empty state when there are no characters", () => {
     mockUseCharactersViewModel.mockReturnValue(createViewModel());
 
-    const { container } = render(<CharactersPage />);
+    render(<CharactersPage />);
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.getByText("No characters found.")).toBeInTheDocument();
+    expect(renderedCharacters).toHaveLength(0);
   });
 });

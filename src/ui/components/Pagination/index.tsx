@@ -18,6 +18,7 @@ export default function Pagination({
   onPrev,
   onNext,
 }: Props) {
+  
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;

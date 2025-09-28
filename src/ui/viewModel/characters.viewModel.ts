@@ -18,9 +18,12 @@ export type CharactersViewModel = {
   goPrev: () => void;
 };
 
+
 export function useCharactersViewModel(): CharactersViewModel {
   const apolloClient = useApolloClient();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Initialize page state from URL query parameter
   const [page, setPageState] = useState<number>(() => {
     const urlPage: string | null = searchParams.get("page");
     return urlPage ? Math.max(1, parseInt(urlPage, 10)) : 1;
@@ -33,6 +36,7 @@ export function useCharactersViewModel(): CharactersViewModel {
   const canPrev = data?.prev !== null && data?.prev !== undefined;
   const canNext = data?.next !== null && data?.next !== undefined;
 
+  // Prefetch next page data and images then cache them
   useEffect(() => {
     if (!loading && data && canNext && page < totalPages) {
       const timer = setTimeout(async () => {
@@ -67,6 +71,7 @@ export function useCharactersViewModel(): CharactersViewModel {
     }
   }, [page, canNext, totalPages, loading, data, apolloClient]);
 
+  // Sync page state with URL query parameter
   const goToPage = useCallback(
     (target: number) => {
       if (target > totalPages) {
@@ -92,6 +97,7 @@ export function useCharactersViewModel(): CharactersViewModel {
     [totalPages, setSearchParams]
   );
 
+  // Update page state if URL query parameter changes externally
   useEffect(() => {
     const urlPage = searchParams.get("page");
     const pageFromUrl = urlPage ? Math.max(1, parseInt(urlPage, 10)) : 1;
@@ -101,6 +107,7 @@ export function useCharactersViewModel(): CharactersViewModel {
     }
   }, [searchParams, page]);
 
+  // Handlers for navigation
   const goNext = useCallback(() => {
     if (canNext) {
       goToPage(page + 1);
@@ -113,6 +120,7 @@ export function useCharactersViewModel(): CharactersViewModel {
     }
   }, [canPrev, goToPage, page]);
 
+  // Retry fetching data
   const retry = useCallback(() => {
     void refetch();
   }, [refetch]);

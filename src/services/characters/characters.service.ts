@@ -8,6 +8,8 @@ import { mapToCharacters } from "./characters.mapper";
 import type { Characters } from "./characters.type";
 
 export function useCharactersService(page: number) {
+  
+  // Data fetching
   const query = useQuery<GetCharactersQuery, GetCharactersQueryVariables>(
     GetCharactersDocument,
     {
@@ -17,6 +19,7 @@ export function useCharactersService(page: number) {
     }
   );
 
+ // Data transformation
   const characters: Characters | null = query.data
     ? mapToCharacters(query.data)
     : null;

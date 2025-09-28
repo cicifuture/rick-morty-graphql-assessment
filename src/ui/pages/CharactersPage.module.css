@@ -19,7 +19,8 @@
 }
 
 .loading,
-.error {
+.error,
+.emptyList {
   min-height: 200px;
   display: flex;
   flex-direction: column;
