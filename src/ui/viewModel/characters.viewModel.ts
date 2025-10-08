@@ -5,8 +5,6 @@ import type {
   CharactersError,
 } from "@/services/characters/characters.type";
 import { useSearchParams } from "react-router-dom";
-import { useApolloClient } from "@apollo/client";
-import { GetCharactersDocument } from "@/api/generated/graphql";
 
 export type CharactersViewModel = {
   page: number;
@@ -21,9 +19,7 @@ export type CharactersViewModel = {
   goPrev: () => void;
 };
 
-
 export function useCharactersViewModel(): CharactersViewModel {
-  const apolloClient = useApolloClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialize page state from URL query parameter
@@ -32,7 +28,8 @@ export function useCharactersViewModel(): CharactersViewModel {
     return urlPage ? Math.max(1, parseInt(urlPage, 10)) : 1;
   });
 
-  const { loading, error, data, refetch } = useCharactersService(page);
+  const { loading, error, data, refetch, prefetch } =
+    useCharactersService(page);
 
   const items = data?.items ?? [];
   const totalPages = data?.pages ?? 1;
@@ -44,27 +41,20 @@ export function useCharactersViewModel(): CharactersViewModel {
     if (!loading && data && canNext && page < totalPages) {
       const timer = setTimeout(async () => {
         try {
-          const nextPageData = await apolloClient.query({
-            query: GetCharactersDocument,
-            variables: { page: page + 1 },
-            fetchPolicy: "cache-first",
+          const nextPage = await prefetch(page + 1);
+
+          const imageUrls =
+            nextPage?.items
+              .map((character) => character.imageUrl)
+              .filter((url) => Boolean(url)) ?? [];
+
+          imageUrls.forEach((url) => {
+            // new Image() is equal to document.createElement('img'), then it will stored in browser cache
+            // so when the real <img> tag use the same url, it will load from cache instead of network
+            // which makes the image appear faster
+            const img = new Image();
+            img.src = url;
           });
-
-          if (nextPageData.data?.characters?.results) {
-            const imageUrls = nextPageData.data.characters.results
-              .map((character) => character && character.image)
-              .filter((item) => item !== null && item !== undefined);
-
-            imageUrls.forEach((url) => {
-              if (typeof url === "string") {
-                // new Image() is equal to document.createElement('img'), then it will stored in browser cache
-                // so when the real <img> tag use the same url, it will load from cache instead of network
-                // which makes the image appear faster
-                const img = new Image();
-                img.src = url;
-              }
-            });
-          }
         } catch (error) {
           console.warn("Prefetch failed:", error);
         }
@@ -72,7 +62,7 @@ export function useCharactersViewModel(): CharactersViewModel {
 
       return () => clearTimeout(timer);
     }
-  }, [page, canNext, totalPages, loading, data, apolloClient]);
+  }, [page, canNext, totalPages, loading, data, prefetch]);
 
   // Sync page state with URL query parameter
   const goToPage = useCallback(

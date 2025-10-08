@@ -1,4 +1,5 @@
-import { useQuery, type ApolloError } from "@apollo/client";
+import { useCallback } from "react";
+import { useQuery, useApolloClient, type ApolloError } from "@apollo/client";
 import {
   GetCharactersDocument,
   type GetCharactersQuery,
@@ -41,6 +42,24 @@ function normalizeError(error?: ApolloError): CharactersError | null {
 }
 
 export function useCharactersService(page: number) {
+  const client = useApolloClient();
+
+  const prefetch = useCallback(
+    async (targetPage: number) => {
+      const result = await client.query<
+        GetCharactersQuery,
+        GetCharactersQueryVariables
+      >({
+        query: GetCharactersDocument,
+        variables: { page: targetPage },
+        fetchPolicy: "cache-first",
+      });
+
+      return result.data ? mapToCharacters(result.data) : null;
+    },
+    [client]
+  );
+
   // Data fetching
   const query = useQuery<GetCharactersQuery, GetCharactersQueryVariables>(
     GetCharactersDocument,
@@ -61,5 +80,6 @@ export function useCharactersService(page: number) {
     error: normalizeError(query.error),
     refetch: query.refetch,
     data: characters,
+    prefetch,
   };
 }
